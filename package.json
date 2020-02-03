@@ -1,0 +1,36 @@
+{
+  "name": "create-phone-number-forwarding",
+  "version": "1.0.0",
+  "description": "Buy a phone number and forward SMS' and calls",
+  "main": "index.js",
+  "bin": {
+    "create-phone-number-forwarding": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefanjudis/create-phone-number-forwarding.git"
+  },
+  "keywords": [
+    "sms",
+    "calls",
+    "phone",
+    "numbers"
+  ],
+  "author": "stefan judis <stefanjudis@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stefanjudis/create-phone-number-forwarding/issues"
+  },
+  "homepage": "https://github.com/stefanjudis/create-phone-number-forwarding#readme",
+  "dependencies": {
+    "execa": "^4.0.0",
+    "inquirer": "^7.0.4",
+    "node-jq": "^1.11.0",
+    "temp-dir": "^2.0.0",
+    "twilio-cli": "^1.9.4",
+    "twilio-run": "^2.2.0"
+  }
+}
