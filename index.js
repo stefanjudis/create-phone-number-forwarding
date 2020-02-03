@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const inquirer = require('inquirer');
 const execa = require('execa');
 const TMP_DIR = require('temp-dir');
