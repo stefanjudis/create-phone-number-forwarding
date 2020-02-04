@@ -74,7 +74,7 @@ async function getConfigData() {
 
     console.log('✅  All done');
   } catch (error) {
-    console.error(error);
+    // we only need to cancel because logs are piped to stderr anyways
     process.exit(1);
   }
 })();
