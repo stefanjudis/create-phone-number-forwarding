@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const { join } = require('path');
 const inquirer = require('inquirer');
 const execa = require('execa');
 const TMP_DIR = require('temp-dir');
@@ -60,9 +61,12 @@ async function getConfigData() {
   try {
     let config = await getConfigData();
 
-    const childProcess = execa('./bin/create-phone-number-forwarding.sh', {
-      env: config
-    });
+    const childProcess = execa(
+      join(__dirname, 'bin', 'create-phone-number-forwarding.sh'),
+      {
+        env: config
+      }
+    );
     childProcess.stdout.pipe(process.stdout);
     childProcess.stderr.pipe(process.stderr);
 
