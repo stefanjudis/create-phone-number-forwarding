@@ -1,5 +1,9 @@
 #!/bin/bash
 #
+# DISCLAIMER I'M ALL UP FOR IMPROVEMENTS OF THIS SHELL SCRIPT
+# If you have comments please file an issue
+# https://github.com/stefanjudis/create-phone-number-forwarding/issues
+#
 # Script Name: create-phone-number-forwarding.sh
 #
 # Author: Stefan Judis
@@ -57,10 +61,6 @@ function create_service_and_get_domain()
   SERVICE_DOMAIN=$(echo $DEPLOY_OUTPUT | grep -o "https://$SERVICE_NAME.*.dev.twil.io" | grep -o " https://$SERVICE_NAME.*.dev.twil.io")
 }
 
-
-# DISCLAIMER I'M ALL UP FOR IMPROVEMENTS OF THIS SHELL SCRIPT
-# ℹ️ If you have comments please file an issue
-#     https://github.com/stefanjudis/create-phone-number-forwarding/issues
 
 # Get directory of this script, copied from on SO
 # https://stackoverflow.com/questions/59895/how-to-get-the-source-directory-of-a-bash-script-from-within-the-script-itself
