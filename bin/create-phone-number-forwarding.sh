@@ -9,7 +9,6 @@
 # also created by running this script
 #
 
-
 function log_step()
 {
   echo ""
