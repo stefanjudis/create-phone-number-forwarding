@@ -66,7 +66,7 @@ function create_service_and_get_domain()
 # https://stackoverflow.com/questions/59895/how-to-get-the-source-directory-of-a-bash-script-from-within-the-script-itself
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # extend path to access jq, twilio-run, the Twilio CLI, ...
-export PATH="$PATH:$CURRENT_DIR/../node_modules/.bin:$CURRENT_DIR/../node_modules/node-jq/bin"
+export PATH="$CURRENT_DIR/../node_modules/.bin:$CURRENT_DIR/../node_modules/node-jq/bin:$PATH"
 
 # ##############################################################################
 # --- START OF THE SCRIPT ######################################################
