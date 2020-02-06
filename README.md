@@ -28,6 +28,7 @@ Make sure you have the following configuration values at hand (or stored in envi
 npx run create-phone-number-forwarding
 
 # or alternatively
+
 npm i -g create-phone-number-forwarding
 create-phone-number-forwarding
 ```
@@ -42,7 +43,7 @@ Whenever someone calls or sends a text message to a Twilio phone number, Twilio 
 
 To forward SMS and phone call what you need to publicly accessible URLs that return the following configuration
 
-### TwiML configuration to forward a call
+#### TwiML configuration to forward a call
 
 ```xml
 <Response>
@@ -50,7 +51,7 @@ To forward SMS and phone call what you need to publicly accessible URLs that ret
 </Response>
 ```
 
-### TwiML configuration to forward an SMS
+#### TwiML configuration to forward an SMS
 
 ```xml
 <Response>
@@ -58,6 +59,34 @@ To forward SMS and phone call what you need to publicly accessible URLs that ret
 </Response>
 ```
 
+### Webhook URLs via Twilio functions
+
+Luckily, Twilio offers also [a serverless product](https://www.twilio.com/docs/runtime/functions). These let you deploy quick HTTP endpoints in a few minutes.
+
+#### Function to foward a call
+
+```js
+exports.handler = function(context, event, callback) {
+  let twiml = new Twilio.twiml.VoiceResponse();
+  twiml.dial(context.MY_PHONE_NUMBER);
+  callback(null, twiml);
+};
+```
+
+#### Function to forward an SMS
+
+```js
+exports.handler = function(context, event, callback) {
+  let twiml = new Twilio.twiml.MessagingResponse();
+  twiml.message(`From: ${event.From}. Message: ${event.Body}`, {
+    to: context.MY_PHONE_NUMBER
+  });
+  callback(null, twiml);
+};
+```
+
 `CPNF` sits on top of [twilio-run](https://github.com/twilio-labs/twilio-run) and [the Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart). All the logic and functionality can be found in [create-phone-number-forwarding.sh](https://github.com/stefanjudis/create-phone-number-forwarding/blob/master/bin/create-phone-number-forwarding.sh).
+
+## Celebrate result 🎉
 
 ![Diagram showing the flow of the proxy number](./docs/call-flow-diagram.png)
