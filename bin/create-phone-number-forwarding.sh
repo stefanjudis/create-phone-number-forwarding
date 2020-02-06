@@ -32,7 +32,8 @@ function get_service_sid()
 
 function get_service_domain()
 {
-  SERVICE_DOMAIN=$(twilio api:serverless:v1:services:environments:list --service-sid $EXISTING_SERVICE_SID -o json | jq -r '.[] | select(.uniqueName == "dev-environment") | .domainName')
+  local SERVICE_DOMAIN_WITHOUT_PROTOCAL=$(twilio api:serverless:v1:services:environments:list --service-sid $EXISTING_SERVICE_SID -o json | jq -r '.[] | select(.uniqueName == "dev-environment") | .domainName')
+  SERVICE_DOMAIN="https://$SERVICE_DOMAIN_WITHOUT_PROTOCAL"
 }
 
 function create_service_and_get_domain()
