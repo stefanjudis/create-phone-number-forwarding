@@ -112,8 +112,8 @@ fi
 
 log_info "SERVICE_DOMAIN: $SERVICE_DOMAIN"
 
-VOICE_ENDPOINT_URL="https://$SERVICE_DOMAIN/forward-call"
-SMS_ENDPOINT_URL="https://$SERVICE_DOMAIN/forward-message"
+VOICE_ENDPOINT_URL="$SERVICE_DOMAIN/forward-call"
+SMS_ENDPOINT_URL="$SERVICE_DOMAIN/forward-message"
 
 log_step "Available functions..."
 log_info "VOICE ENDPOINT: $VOICE_ENDPOINT_URL"
