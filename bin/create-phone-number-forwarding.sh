@@ -125,6 +125,7 @@ log_info "SMS ENDPOINT: $SMS_ENDPOINT_URL"
 
 log_step "Buying phone number..."
 TWILIO_NUMBER=$(twilio api:core:available-phone-numbers:local:list --country-code $TWILIO_NUMBER_COUNTRY --sms-enabled --voice-enabled -o json | jq -r '.[0] | .phoneNumber')
+log_step "Found number: $TWILIO_NUMBER"
 twilio api:core:incoming-phone-numbers:local:create --phone-number="$TWILIO_NUMBER" -o json | jq -r '.[0] | .friendlyName'
 log_step "Bought number: $TWILIO_NUMBER"
 

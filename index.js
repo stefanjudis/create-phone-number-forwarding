@@ -70,7 +70,7 @@ async function getConfigData() {
 }
 
 async function warnAboutCost() {
-  logWarning("By running this script you'll be buying a Twilio phone Number.");
+  logWarning("By running this script you'll be buying a Twilio phone number.");
   console.log(
     `${WARNING_SPACER}Have a look at https://www.twilio.com/pricing to learn more.\n`
   );
