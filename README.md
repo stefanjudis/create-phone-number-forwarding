@@ -10,6 +10,8 @@
 
 To buy and configure phone numbers using `CPNF` you need to have **[a free Twilio account](http://twilio.com/try-twilio)** and **a UNIX environment**.
 
+⚠️ Running this script will create cost because it buys a US Twilio phone number. If you want to have more information have a look at [the pricing page](https://www.twilio.com/pricing).
+
 ### Okay, but what's Twilio?
 
 Twilio is a global cloud communications and customer engagement platform that has several APIs at it's core. These APIs enable developers to build and automate flows that usually happen over phone, SMS, Whatsapp, Email, ...
@@ -33,7 +35,9 @@ npm i -g create-phone-number-forwarding
 create-phone-number-forwarding
 ```
 
-That's it to buy and configure a phone number. 👆
+That's it to buy and configure a phone number. And it should like the following: 👇
+
+![create-phone-number-forwarding in the terminal](./docs/cpnf-terminal.png)
 
 ## Cool, but how does this work?
 
@@ -88,5 +92,7 @@ exports.handler = function(context, event, callback) {
 `CPNF` sits on top of [twilio-run](https://github.com/twilio-labs/twilio-run) and [the Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart). All the logic and functionality can be found in [create-phone-number-forwarding.sh](https://github.com/stefanjudis/create-phone-number-forwarding/blob/master/bin/create-phone-number-forwarding.sh).
 
 ## Celebrate result 🎉
+
+Phone calls and SMS to your new Twilio number will now be forwarded to your personal number.
 
 ![Diagram showing the flow of the proxy number](./docs/call-flow-diagram.png)
