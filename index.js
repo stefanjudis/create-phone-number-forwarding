@@ -5,60 +5,92 @@ const inquirer = require('inquirer');
 const execa = require('execa');
 const TMP_DIR = require('temp-dir');
 
+const WARNING_SPACER = '    ';
+
+const requiredConfig = [
+  {
+    type: 'input',
+    name: 'TWILIO_ACCOUNT_SID',
+    message: 'Your account SID:'
+  },
+  {
+    type: 'password',
+    name: 'TWILIO_AUTH_TOKEN',
+    message: 'Your auth token:'
+  },
+  {
+    type: 'input',
+    name: 'MY_PHONE_NUMBER',
+    message: 'Your phone number:'
+  }
+];
+
+const logWarning = msg => console.log(`\n⚠️   ${msg}`);
+
+const entryNeedsConsoleHint = entry => {
+  const requiredEntries = ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN'];
+
+  return requiredEntries.includes(entry.name);
+};
+const configNeedsConsoleHint = config =>
+  !!config.filter(entry => entryNeedsConsoleHint(entry)).length;
+
 async function getConfigData() {
-  const {
-    MY_PHONE_NUMBER,
-    TWILIO_ACCOUNT_SID,
-    TWILIO_AUTH_TOKEN
-  } = process.env;
+  const { config, inquirerConfig } = requiredConfig.reduce(
+    (acc, cur) => {
+      const { name } = cur;
+      const { config, inquirerConfig } = acc;
 
-  const config = {
-    MY_PHONE_NUMBER,
-    TMP_DIR,
-    TWILIO_ACCOUNT_SID,
-    TWILIO_AUTH_TOKEN
-  };
-
-  if (MY_PHONE_NUMBER && TWILIO_ACCOUNT_SID && TWILIO_AUTH_TOKEN) {
-    return config;
-  }
-
-  console.log(
-    '⚠️  Before we get started make sure you have access to your Twilio console (twilio.com/console)'
+      if (process.env[name]) {
+        console.log(
+          `Using detected env variable: ${name}=${process.env[name].substr(
+            0,
+            8
+          )}...`
+        );
+        config[name] = process.env[name];
+      } else {
+        inquirerConfig.push(cur);
+      }
+      return acc;
+    },
+    { config: {}, inquirerConfig: [] }
   );
-  console.log("   There you'll find your Account SID and your Auth Token.");
 
-  const promptItems = [];
-
-  if (!TWILIO_ACCOUNT_SID) {
-    promptItems.push({
-      type: 'input',
-      name: 'TWILIO_ACCOUNT_SID',
-      message: 'Your account SID:'
-    });
+  if (configNeedsConsoleHint(inquirerConfig)) {
+    logWarning(
+      'To authenticate with Twilio make sure you have access to your Twilio console (twilio.com/console)'
+    );
+    console.log(
+      `${WARNING_SPACER}There you'll find your Account SID and your Auth Token.\n`
+    );
   }
 
-  if (!TWILIO_AUTH_TOKEN) {
-    promptItems.push({
-      type: 'password',
-      name: 'TWILIO_AUTH_TOKEN',
-      message: 'Your auth token:'
-    });
-  }
+  return { TMP_DIR, ...config, ...(await inquirer.prompt(inquirerConfig)) };
+}
 
-  if (!MY_PHONE_NUMBER) {
-    promptItems.push({
-      type: 'input',
-      name: 'MY_PHONE_NUMBER',
-      message: 'Your phone number:'
-    });
-  }
+async function warnAboutCost() {
+  logWarning("By running this script you'll be buying a Twilio phone Number.");
+  console.log(
+    `${WARNING_SPACER}Have a look at https://www.twilio.com/pricing to learn more.\n`
+  );
 
-  return { ...config, ...(await inquirer.prompt(promptItems)) };
+  const { awareOfCost } = await inquirer.prompt({
+    type: 'list',
+    choices: ['Yes', 'Oh no!'],
+    message: 'Do you want to proceed?',
+    name: 'awareOfCost'
+  });
+
+  if (awareOfCost !== 'Yes') {
+    throw new Error('Cancelling to avoid cost');
+  }
 }
 
 (async () => {
   try {
+    await warnAboutCost();
+
     let config = await getConfigData();
 
     const childProcess = execa(
@@ -67,13 +99,15 @@ async function getConfigData() {
         env: config
       }
     );
+
     childProcess.stdout.pipe(process.stdout);
     childProcess.stderr.pipe(process.stderr);
 
     await childProcess;
 
-    console.log('✅  All done');
+    console.log('🎉  All done.');
   } catch (error) {
+    console.error(error);
     // we only need to cancel because logs are piped to stderr anyways
     process.exit(1);
   }
