@@ -11,17 +11,24 @@ const requiredConfig = [
   {
     type: 'input',
     name: 'TWILIO_ACCOUNT_SID',
-    message: 'Your account SID:'
+    message: 'Your account SID (AC.....):'
   },
   {
     type: 'password',
     name: 'TWILIO_AUTH_TOKEN',
-    message: 'Your auth token:'
+    message: 'Your auth token (XYZ.....):'
   },
   {
     type: 'input',
     name: 'MY_PHONE_NUMBER',
-    message: 'Your phone number:'
+    message: 'Your phone number (+11234567890):',
+    validate: input => {
+      if (input.includes(' ')) {
+        return 'Please provide you number without spaces.';
+      }
+
+      return true;
+    }
   }
 ];
 
