@@ -13,11 +13,17 @@
 # also created by running this script
 #
 
+# fail script after any non-0 status code
+# More info: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -e
+
 function log_step()
 {
   echo ""
   echo "💻  $1"
-  [ ! -z "$2" ] && echo "    -> $2"
+  if [ ! -z "$2" ]; then
+    echo "    -> $2"
+  fi
 }
 
 function log_info()
@@ -53,12 +59,6 @@ function create_service_and_get_domain()
   log_step "Deploying new service files using twilio-run..."
 
   DEPLOY_OUTPUT=$(cd $TMP_SERVICE_DIR; twilio-run deploy --service-name=$SERVICE_NAME)
-
-  if [ $? -ne 0 ]
-  then
-      exit $?
-  fi
-
   SERVICE_DOMAIN=$(echo $DEPLOY_OUTPUT | grep -o "https://$SERVICE_NAME.*.dev.twil.io" | grep -o " https://$SERVICE_NAME.*.dev.twil.io")
 }
 
@@ -102,12 +102,12 @@ log_info "EXISTING_SERVICE_SID: $EXISTING_SERVICE_SID"
 # get_service_domain or create_service_and_get_domain
 SERVICE_DOMAIN=""
 
-if [ $EXISTING_SERVICE_SID ]
+if [[ $EXISTING_SERVICE_SID ]]
 then
   log_step "Found an existing service forwarding to your number. Getting it's domain..."
   get_service_domain
 else
-  log_step "No existing service found. Creating a new one..."
+  log_step "No existing serverless service found. Creating a new one..."
   create_service_and_get_domain
 fi
 
@@ -116,26 +116,24 @@ log_info "SERVICE_DOMAIN: $SERVICE_DOMAIN"
 VOICE_ENDPOINT_URL="$SERVICE_DOMAIN/forward-call"
 SMS_ENDPOINT_URL="$SERVICE_DOMAIN/forward-message"
 
-log_step "Available functions..."
-log_info "VOICE ENDPOINT: $VOICE_ENDPOINT_URL"
-log_info "SMS ENDPOINT: $SMS_ENDPOINT_URL"
-
+log_info "Protected serverless functions deployed"
+log_info "To learn more about signature validation: https://www.twilio.com/docs/runtime/functions/request-flow"
 
 # --- BUY A PHONE NUMBER #######################################################
 
-log_step "Buying phone number..."
+log_step "Querying and buying a phone number..."
 TWILIO_NUMBER=$(twilio api:core:available-phone-numbers:local:list --country-code $TWILIO_NUMBER_COUNTRY --sms-enabled --voice-enabled -o json | jq -r '.[0] | .phoneNumber')
-log_step "Found number: $TWILIO_NUMBER"
+log_info "Found number: $TWILIO_NUMBER"
 twilio api:core:incoming-phone-numbers:local:create --phone-number="$TWILIO_NUMBER" -o json | jq -r '.[0] | .friendlyName'
-log_step "Bought number: $TWILIO_NUMBER"
+log_info "Bought number: $TWILIO_NUMBER"
 
 
 # --- CONFIGURE PHONE NUMBER ###################################################
 
 log_step "Configuring phone number with functions"
 twilio phone-numbers:update $TWILIO_NUMBER  --sms-url $SMS_ENDPOINT_URL --voice-url $VOICE_ENDPOINT_URL
-# exit 1
-log_step "Updated phone number"
+log_info "Updated phone number"
+log_info "See number configurat at https://www.twilio.com/console/phone-numbers/incoming"
 
 
 # --- CELEBRATE ################################################################

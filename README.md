@@ -8,7 +8,7 @@
 
 ### Prerequisite
 
-To buy and configure phone numbers using `CPNF` you need to have **[a free Twilio account](http://twilio.com/try-twilio)** and **a UNIX environment**.
+To buy and configure phone numbers using `CPNF` you need to have **[a free Twilio account](http://twilio.com/try-twilio?utm_source=devangel&utm_medium=github&utm_campaign=create-phone-number-forwarding)** and **a UNIX environment**.
 
 ⚠️ Running this script will create cost because it buys a US Twilio phone number. If you want to have more information have a look at [the pricing page](https://www.twilio.com/pricing).
 

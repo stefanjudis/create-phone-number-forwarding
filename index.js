@@ -78,8 +78,9 @@ async function getConfigData() {
 
 async function warnAboutCost() {
   logWarning("By running this script you'll be buying a Twilio phone number.");
+  console.log(`${WARNING_SPACER}It will be charged to your account.`);
   console.log(
-    `${WARNING_SPACER}Have a look at https://www.twilio.com/pricing to learn more.\n`
+    `${WARNING_SPACER}Have a look at https://www.twilio.com/pricing to learn more about how much.\n`
   );
 
   const { awareOfCost } = await inquirer.prompt({
