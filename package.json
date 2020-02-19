@@ -1,6 +1,6 @@
 {
   "name": "create-phone-number-forwarding",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Buy a phone number and forward SMS' and calls",
   "main": "index.js",
   "bin": {
